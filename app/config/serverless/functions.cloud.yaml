@@ -1,0 +1,18 @@
+# Funciones para despliegue en AWS
+# TODO: Descomentar cuando se implemente deploy completo a AWS
+
+registerForm:
+  handler: src/handlers/register.handler
+  name: ${self:service}-register-${self:provider.stage}
+  events:
+    - httpApi:
+        path: /formularios
+        method: post
+
+listForms:
+  handler: src/handlers/list.handler
+  name: ${self:service}-list-${self:provider.stage}
+  events:
+    - httpApi:
+        path: /formularios
+        method: get

@@ -1,0 +1,8 @@
+# Configuración de plugins por ambiente
+
+local:
+  - serverless-esbuild
+  - serverless-offline
+
+cloud:
+  - serverless-esbuild

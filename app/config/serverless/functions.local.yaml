@@ -1,0 +1,15 @@
+# Funciones para desarrollo local con serverless-offline
+
+registerForm:
+  handler: src/formularios/infrastructure/http/RegisterFormularioHandler.register
+  events:
+    - httpApi:
+        path: /formularios
+        method: post
+
+listForms:
+  handler: src/formularios/infrastructure/http/ListFormulariosHandler.list
+  events:
+    - httpApi:
+        path: /formularios
+        method: get

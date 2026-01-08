@@ -1,0 +1,132 @@
+### Variables
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+###############################################
+# REGISTRAR FORMULARIOS
+###############################################
+
+### 1. Registrar formulario válido con CC
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "nombres": "Juan Carlos",
+  "apellidos": "Pérez García",
+  "tipoDocumento": "CC",
+  "numeroDocumento": "1234567890",
+  "email": "juan.perez@example.com",
+  "celular": "3001234567",
+  "tratamientoDatos": true
+}
+
+### 2. Registrar con CE y campos adicionales
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "nombres": "María",
+  "apellidos": "González",
+  "tipoDocumento": "CE",
+  "numeroDocumento": "CE11223344",
+  "email": "maria.gonzalez@test.com",
+  "celular": "3159876543",
+  "tratamientoDatos": true,
+  "empresa": "Tech Solutions SAS",
+  "cargo": "Gerente de Proyectos",
+  "ciudad": "Bogotá"
+}
+
+### 3. Registrar con PA (Pasaporte)
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "nombres": "Carlos",
+  "apellidos": "Rodríguez",
+  "tipoDocumento": "PA",
+  "numeroDocumento": "AB123456",
+  "email": "carlos.rodriguez@mail.co",
+  "celular": "3207654321",
+  "tratamientoDatos": true
+}
+
+###############################################
+# VALIDACIONES - CASOS DE ERROR
+###############################################
+
+### 4. ERROR: Falta nombres
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "apellidos": "Martínez",
+  "tipoDocumento": "CC",
+  "numeroDocumento": "1122334455",
+  "email": "test@example.com",
+  "celular": "3001112233",
+  "tratamientoDatos": true
+}
+
+### 5. ERROR: Email inválido
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "nombres": "Pedro",
+  "apellidos": "Sánchez",
+  "tipoDocumento": "CC",
+  "numeroDocumento": "5566778899",
+  "email": "correo-invalido",
+  "celular": "3009876543",
+  "tratamientoDatos": true
+}
+
+### 6. ERROR: Celular inválido
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "nombres": "Diego",
+  "apellidos": "Fernández",
+  "tipoDocumento": "CC",
+  "numeroDocumento": "4433221100",
+  "email": "diego@example.com",
+  "celular": "123",
+  "tratamientoDatos": true
+}
+
+### 7. ERROR: tratamientoDatos en false
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "nombres": "Luis",
+  "apellidos": "Torres",
+  "tipoDocumento": "CC",
+  "numeroDocumento": "9988776655",
+  "email": "luis.torres@example.com",
+  "celular": "3006655443",
+  "tratamientoDatos": false
+}
+
+### 8. ERROR: tipo_documento inválido
+POST {{baseUrl}}/formularios
+Content-Type: {{contentType}}
+
+{
+  "nombres": "Sofia",
+  "apellidos": "Ramírez",
+  "tipoDocumento": "XX",
+  "numeroDocumento": "1111111111",
+  "email": "sofia.ramirez@example.com",
+  "celular": "3005544332",
+  "tratamientoDatos": true
+}
+
+###############################################
+# LISTAR FORMULARIOS
+###############################################
+
+### 9. Listar todos los formularios
+GET {{baseUrl}}/formularios

@@ -1,0 +1,62 @@
+service: formularios-microservice
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+
+custom:
+  tableName: formularios-${self:provider.stage}
+
+resources:
+  Resources:
+    FormulariosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+          - AttributeName: tipo_documento
+            AttributeType: S
+          - AttributeName: numero_documento
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: createdAt
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: DocumentoIndex
+            KeySchema:
+              - AttributeName: tipo_documento
+                KeyType: HASH
+              - AttributeName: numero_documento
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        Tags:
+          - Key: Environment
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}
+
+  Outputs:
+    FormulariosTableName:
+      Description: Nombre de la tabla DynamoDB
+      Value: !Ref FormulariosTable
+      Export:
+        Name: ${self:service}-table-${self:provider.stage}
+    
+    FormulariosTableArn:
+      Description: ARN de la tabla DynamoDB
+      Value: !GetAtt FormulariosTable.Arn
+      Export:
+        Name: ${self:service}-table-arn-${self:provider.stage}

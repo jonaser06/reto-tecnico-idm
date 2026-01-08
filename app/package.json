@@ -1,0 +1,63 @@
+{
+  "name": "formularios-microservice",
+  "version": "1.0.0",
+  "description": "Microservicio de registro dinámico de formularios",
+  "main": "src/handlers/register.ts",
+  "scripts": {
+    "dev": "sls offline start",
+    "test": "jest --config=test/jest.config.js",
+    "test:coverage": "jest --config=test/jest.config.js --coverage",
+    "test:watch": "jest --config=test/jest.config.js --watch",
+    "test:unit": "jest --config=test/jest.config.js unit",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "keywords": [
+    "serverless",
+    "lambda",
+    "dynamodb",
+    "typescript",
+    "api-first"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.18.0",
+    "@aws-sdk/client-dynamodb": "^3.515.0",
+    "@aws-sdk/lib-dynamodb": "^3.515.0",
+    "@middy/core": "^5.2.0",
+    "@middy/http-error-handler": "^5.2.0",
+    "@middy/input-output-logger": "^5.2.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "inversify": "^6.0.2",
+    "reflect-metadata": "^0.2.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.3.1",
+    "@jest/globals": "^29.7.0",
+    "@shelf/jest-dynamodb": "^3.4.4",
+    "@types/aws-lambda": "^8.10.133",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.11.5",
+    "@types/uuid": "^9.0.7",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "esbuild": "^0.19.12",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.4",
+    "serverless": "^3.38.0",
+    "serverless-dynamodb": "^0.2.47",
+    "serverless-esbuild": "^1.52.1",
+    "serverless-offline": "^13.3.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
