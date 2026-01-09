@@ -10,7 +10,8 @@
     "test:watch": "jest --config=test/jest.config.js --watch",
     "test:unit": "jest --config=test/jest.config.js unit",
     "lint": "eslint src/**/*.ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "docs": "npx @redocly/cli build-docs docs/openapi/openapi.yaml -o docs/index.html && open docs/index.html"
   },
   "keywords": [
     "serverless",
@@ -22,12 +23,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^1.18.0",
     "@aws-sdk/client-dynamodb": "^3.515.0",
     "@aws-sdk/lib-dynamodb": "^3.515.0",
     "@middy/core": "^5.2.0",
     "@middy/http-error-handler": "^5.2.0",
-    "@middy/input-output-logger": "^5.2.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "inversify": "^6.0.2",
@@ -35,7 +34,6 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^10.3.1",
     "@jest/globals": "^29.7.0",
     "@shelf/jest-dynamodb": "^3.4.4",
     "@types/aws-lambda": "^8.10.133",

@@ -1,103 +1,207 @@
-# 🚀 Flujo de Desarrollo (TODO con Docker)
+# Microservicio de Registro de Formularios
 
-## ✅ Requisitos previos
-- Docker y Docker Compose instalados
-- Credenciales AWS configuradas
+Microservicio para registrar y consultar formularios con campos dinámicos. Desarrollado con Node.js, TypeScript y DynamoDB, siguiendo arquitectura hexagonal y Domain-Driven Design.
 
----
+## Que hace este proyecto
 
-## 1️⃣ CONFIGURAR VARIABLES AWS
+- Recibe formularios via API REST con campos obligatorios y opcionales
+- Valida los datos antes de guardarlos
+- Almacena en DynamoDB (base de datos NoSQL)
+- Permite consultar todos los formularios registrados
+- Acepta campos adicionales sin modificar el codigo
+
+## Campos del formulario
+
+| Campo | Tipo | Requerido | Descripcion |
+|-------|------|-----------|-------------|
+| nombre | string | Si | Nombre de la persona |
+| apellido | string | Si | Apellido de la persona |
+| tipo_documento | enum | Si | DNI, CE o PASAPORTE |
+| numero_documento | string | Si | Numero del documento |
+| celular | string | Si | Telefono (9-15 digitos) |
+| correo | string | Si | Email valido |
+| tratamiento_datos | boolean | Si | Debe ser true |
+| *campos adicionales* | any | No | Cualquier campo extra |
+
+## Arquitectura
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         API Gateway                              │
+│                    POST/GET /formularios                         │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      Lambda Functions                            │
+│  ┌─────────────────────┐    ┌─────────────────────────────┐     │
+│  │ RegisterFormulario  │    │    ListFormularios          │     │
+│  └─────────────────────┘    └─────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                        Aplicacion                                │
+│  ┌─────────────────────┐    ┌─────────────────────────────┐     │
+│  │  CommandHandler     │    │      QueryHandler           │     │
+│  │  (registrar)        │    │      (listar)               │     │
+│  └─────────────────────┘    └─────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         Dominio                                  │
+│  ┌──────────────┐  ┌──────────────────────────────────────┐     │
+│  │  Formulario  │  │  Value Objects                       │     │
+│  │  (entidad)   │  │  Email, Celular, TipoDocumento...    │     │
+│  └──────────────┘  └──────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       Infraestructura                            │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              DynamoDB Repository                         │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         DynamoDB                                 │
+│                    tabla: formularios-dev                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Estructura del proyecto
+
+```
+app/
+├── src/
+│   ├── formularios/
+│   │   ├── domain/           # Entidades y reglas de negocio
+│   │   ├── application/      # Casos de uso (commands, queries)
+│   │   └── infrastructure/   # Handlers HTTP, repositorio DynamoDB
+│   └── shared/               # Contenedor DI, errores comunes
+├── test/                     # Tests unitarios
+├── docs/                     # Documentacion OpenAPI
+└── config/                   # Configuracion serverless
+```
+
+## Requisitos
+
+- Docker y Docker Compose
+- Credenciales de AWS configuradas
+
+## Como levantar el proyecto
+
+### 1. Configurar credenciales AWS
 
 ```bash
-# Exporta tus credenciales AWS en la terminal
 export AWS_ACCESS_KEY_ID="tu_access_key"
 export AWS_SECRET_ACCESS_KEY="tu_secret_key"
-export AWS_SESSION_TOKEN="tu_session_token"  # Opcional
+export AWS_SESSION_TOKEN="tu_session_token"  # si usas credenciales temporales
 ```
 
----
-
-## 2️⃣ DESPLEGAR TABLA DYNAMODB (Solo una vez)
+### 2. Crear la tabla en DynamoDB (solo la primera vez)
 
 ```bash
-# Desde la raíz del proyecto
-docker-compose --profile deploy up deploy-table
-
-# Esto ejecuta dentro de Docker:
-# ✅ yarn install
-# ✅ sls deploy --config serverless-table.yml --stage dev
-# ✅ Crea tabla "formularios-dev" en AWS
+make deploy-table
 ```
 
-**Salida esperada:**
-```
-✔ Service deployed to stack formularios-microservice-dev
-endpoints: (none)
-functions: (none)
-```
-
----
-
-## 3️⃣ EJECUTAR LA APLICACIÓN
+### 3. Levantar el servidor local
 
 ```bash
-# Levantar el servicio principal
-docker-compose up
-
-# API disponible en: http://localhost:3000
+make start
 ```
 
----
+La API queda disponible en `http://localhost:3000`
 
-## 4️⃣ PROBAR LA API
+## Comandos disponibles
 
-### Registrar formulario:
+| Comando | Que hace |
+|---------|----------|
+| `make start` | Levanta el servidor en localhost:3000 |
+| `make deploy-table` | Crea la tabla DynamoDB en AWS |
+| `make test` | Ejecuta los tests con cobertura |
+| `make docs` | Genera y abre la documentacion OpenAPI |
+| `make deploy` | Despliega las lambdas a AWS |
+| `make remove` | Elimina las lambdas de AWS |
+| `make remove-table` | Elimina la tabla DynamoDB |
+
+## Probar la API
+
+### Registrar un formulario
+
 ```bash
 curl -X POST http://localhost:3000/formularios \
   -H "Content-Type: application/json" \
   -d '{
     "nombre": "Juan",
-    "apellido": "Pérez",
+    "apellido": "Perez",
     "tipo_documento": "DNI",
     "numero_documento": "12345678",
-    "celular": "+51987654321",
+    "celular": "987654321",
     "correo": "juan@example.com",
-    "tratamiento_datos": true,
-    "empresa": "ACME Corp"
+    "tratamiento_datos": true
   }'
 ```
 
-### Listar formularios:
+### Registrar con campos adicionales
+
+```bash
+curl -X POST http://localhost:3000/formularios \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Maria",
+    "apellido": "Garcia",
+    "tipo_documento": "CE",
+    "numero_documento": "CE123456",
+    "celular": "+51987654321",
+    "correo": "maria@example.com",
+    "tratamiento_datos": true,
+    "empresa": "Tech Solutions",
+    "cargo": "Desarrolladora",
+    "ciudad": "Lima"
+  }'
+```
+
+### Listar formularios
+
 ```bash
 curl http://localhost:3000/formularios
 ```
 
----
+## Tests
 
-## 5️⃣ ELIMINAR RECURSOS AWS
+El proyecto incluye tests unitarios para:
+
+- Value Objects (Email, Celular, TipoDocumento, NumeroDocumento)
+- Command Handlers (registro de formularios)
+- Validaciones de campos obligatorios y formatos
+
+Para ejecutar los tests:
 
 ```bash
-# Cuando termines, elimina la tabla DynamoDB
-docker-compose run --rm deploy-table sh -c "sls remove --config serverless-table.yml --stage dev"
+make test
 ```
 
----
+## Tecnologias
 
-## 📋 Resumen de comandos:
+- Node.js 20 con TypeScript
+- Serverless Framework
+- AWS Lambda + API Gateway
+- DynamoDB
+- Inversify (inyeccion de dependencias)
+- Middy (middleware para Lambda)
+- Jest (testing)
+- class-validator (validaciones)
 
-| Acción | Comando |
-|--------|---------|
-| Desplegar tabla | `docker-compose --profile deploy up deploy-table` |
-| Iniciar app | `docker-compose up` |
-| Ver logs | `docker-compose logs -f lambda` |
-| Detener app | `docker-compose down` |
-| Eliminar tabla | `docker-compose run --rm deploy-table sh -c "sls remove --config serverless-table.yml --stage dev"` |
+## Documentacion API
 
----
+La especificacion OpenAPI esta en `app/docs/openapi/`. Para verla:
 
-## ⚠️ Notas importantes:
+```bash
+make docs
+```
 
-- **TODO se ejecuta desde Docker** - No necesitas instalar Node/Serverless localmente
-- La tabla se crea **UNA VEZ** y persiste datos entre reinicios de la app
-- El código se conecta a DynamoDB **real en AWS** (generará costos mínimos)
-- Las variables AWS se pasan desde tu terminal al contenedor Docker
+Esto genera un HTML con la documentacion interactiva.

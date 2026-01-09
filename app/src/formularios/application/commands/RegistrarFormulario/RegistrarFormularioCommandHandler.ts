@@ -16,27 +16,27 @@ export class RegistrarFormularioCommandHandler {
 
   async execute(command: RegistrarFormularioCommand): Promise<Result<FormularioDTO>> {
     // Validar value objects
-    const emailResult = Email.create(command.email);
-    if (!emailResult.isSuccess()) return Result.fail(emailResult.getError());
+    const correoResult = Email.create(command.correo);
+    if (!correoResult.isSuccess()) return Result.fail(correoResult.getError());
 
     const celularResult = Celular.create(command.celular);
     if (!celularResult.isSuccess()) return Result.fail(celularResult.getError());
 
-    const tipoDocumentoResult = TipoDocumento.create(command.tipoDocumento);
+    const tipoDocumentoResult = TipoDocumento.create(command.tipo_documento);
     if (!tipoDocumentoResult.isSuccess()) return Result.fail(tipoDocumentoResult.getError());
 
-    const numeroDocumentoResult = NumeroDocumento.create(command.numeroDocumento);
+    const numeroDocumentoResult = NumeroDocumento.create(command.numero_documento);
     if (!numeroDocumentoResult.isSuccess()) return Result.fail(numeroDocumentoResult.getError());
 
     // Crear entidad
     const formularioResult = Formulario.create({
-      nombres: command.nombres,
-      apellidos: command.apellidos,
-      tipoDocumento: tipoDocumentoResult.getValue(),
-      numeroDocumento: numeroDocumentoResult.getValue(),
+      nombre: command.nombre,
+      apellido: command.apellido,
+      tipo_documento: tipoDocumentoResult.getValue(),
+      numero_documento: numeroDocumentoResult.getValue(),
       celular: celularResult.getValue(),
-      email: emailResult.getValue(),
-      tratamientoDatos: command.tratamientoDatos,
+      correo: correoResult.getValue(),
+      tratamiento_datos: command.tratamiento_datos,
       camposAdicionales: command.camposAdicionales,
     });
 
@@ -46,19 +46,19 @@ export class RegistrarFormularioCommandHandler {
 
     // Verificar duplicado
     const existingFormulario = await this.repository.findByDocumento(
-      formulario.tipoDocumento.getValue(),
-      formulario.numeroDocumento.getValue(),
+      formulario.tipo_documento.getValue(),
+      formulario.numero_documento.getValue(),
     );
 
     if (existingFormulario) {
       return Result.fail(
         new Error(
-          `Ya existe un formulario con documento ${formulario.tipoDocumento.getValue()} ${formulario.numeroDocumento.getValue()}`,
+          `Ya existe un formulario con documento ${formulario.tipo_documento.getValue()} ${formulario.numero_documento.getValue()}`,
         ),
       );
     }
 
-    // Persistir con manejo de errores
+    // Persistir
     try {
       await this.repository.save(formulario);
     } catch (error) {
@@ -68,13 +68,13 @@ export class RegistrarFormularioCommandHandler {
     // Construir DTO de respuesta
     const dto: FormularioDTO = {
       id: formulario.id.getValue(),
-      nombres: formulario.nombres,
-      apellidos: formulario.apellidos,
-      tipoDocumento: formulario.tipoDocumento.getValue(),
-      numeroDocumento: formulario.numeroDocumento.getValue(),
+      nombre: formulario.nombre,
+      apellido: formulario.apellido,
+      tipo_documento: formulario.tipo_documento.getValue(),
+      numero_documento: formulario.numero_documento.getValue(),
       celular: formulario.celular.getValue(),
-      email: formulario.email.getValue(),
-      tratamientoDatos: formulario.tratamientoDatos,
+      correo: formulario.correo.getValue(),
+      tratamiento_datos: formulario.tratamiento_datos,
       createdAt: formulario.createdAt.toISOString(),
       updatedAt: formulario.updatedAt.toISOString(),
       ...(formulario.camposAdicionales || {}),

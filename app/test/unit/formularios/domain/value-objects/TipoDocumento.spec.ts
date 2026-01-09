@@ -2,42 +2,42 @@ import { TipoDocumento } from "../../../../../src/formularios/domain/value-objec
 
 describe("TipoDocumento Value Object", () => {
   describe("create", () => {
-    it("debería crear CC (Cédula de Ciudadanía)", () => {
-      const result = TipoDocumento.create("CC");
+    it("deberia crear DNI", () => {
+      const result = TipoDocumento.create("DNI");
 
       expect(result.isSuccess()).toBe(true);
-      expect(result.getValue().getValue()).toBe("CC");
+      expect(result.getValue().getValue()).toBe("DNI");
     });
 
-    it("debería crear CE (Cédula de Extranjería)", () => {
+    it("deberia crear CE (Carnet de Extranjeria)", () => {
       const result = TipoDocumento.create("CE");
 
       expect(result.isSuccess()).toBe(true);
       expect(result.getValue().getValue()).toBe("CE");
     });
 
-    it("debería crear PA (Pasaporte)", () => {
-      const result = TipoDocumento.create("PA");
+    it("deberia crear PASAPORTE", () => {
+      const result = TipoDocumento.create("PASAPORTE");
 
       expect(result.isSuccess()).toBe(true);
-      expect(result.getValue().getValue()).toBe("PA");
+      expect(result.getValue().getValue()).toBe("PASAPORTE");
     });
 
-    it("debería rechazar tipo de documento inválido", () => {
-      const result = TipoDocumento.create("TI");
+    it("deberia rechazar tipo de documento invalido", () => {
+      const result = TipoDocumento.create("CC");
 
       expect(result.isSuccess()).toBe(false);
-      expect(result.getError()?.message).toContain("CC, CE o PA");
+      expect(result.getError()?.message).toContain("DNI, CE o PASAPORTE");
     });
 
-    it("debería rechazar tipo de documento vacío", () => {
+    it("deberia rechazar tipo de documento vacio", () => {
       const result = TipoDocumento.create("");
 
       expect(result.isSuccess()).toBe(false);
     });
 
-    it("debería rechazar tipo de documento en minúsculas", () => {
-      const result = TipoDocumento.create("cc");
+    it("deberia rechazar tipo de documento en minusculas", () => {
+      const result = TipoDocumento.create("dni");
 
       expect(result.isSuccess()).toBe(false);
     });

@@ -3,8 +3,6 @@ import { Container } from "inversify";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { TYPES } from "./types";
-import { ILogger } from "../logger/ILogger";
-import { PowertoolsLogger } from "../logger/PowertoolsLogger";
 import { IFormularioRepository } from "../../../formularios/domain/repositories/IFormularioRepository";
 import { DynamoDBFormularioRepository } from "../../../formularios/infrastructure/persistence/DynamoDBFormularioRepository";
 import { RegistrarFormularioCommandHandler } from "../../../formularios/application/commands/RegistrarFormulario/RegistrarFormularioCommandHandler";
@@ -20,9 +18,6 @@ export function buildContainer(): Container {
   }
 
   const container = new Container();
-
-  // Logger
-  container.bind<ILogger>(TYPES.Logger).to(PowertoolsLogger).inSingletonScope();
 
   // DynamoDB Client (Singleton para reutilizar conexiones)
   container
@@ -50,8 +45,4 @@ export function buildContainer(): Container {
 
   cachedContainer = container;
   return container;
-}
-
-export function resetContainer(): void {
-  cachedContainer = null;
 }

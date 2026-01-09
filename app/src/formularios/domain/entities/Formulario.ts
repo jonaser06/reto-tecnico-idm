@@ -6,19 +6,19 @@ import { TipoDocumento } from "../value-objects/TipoDocumento";
 import { NumeroDocumento } from "../value-objects/NumeroDocumento";
 import {
   TratamientoDatosNotAcceptedError,
-  InvalidNombresError,
-  InvalidApellidosError,
+  InvalidNombreError,
+  InvalidApellidoError,
 } from "../../../shared/errors/DomainError";
 
 interface FormularioProps {
   id?: FormularioId;
-  nombres: string;
-  apellidos: string;
-  tipoDocumento: TipoDocumento;
-  numeroDocumento: NumeroDocumento;
+  nombre: string;
+  apellido: string;
+  tipo_documento: TipoDocumento;
+  numero_documento: NumeroDocumento;
   celular: Celular;
-  email: Email;
-  tratamientoDatos: boolean;
+  correo: Email;
+  tratamiento_datos: boolean;
   camposAdicionales?: Record<string, unknown>;
   createdAt?: Date;
   updatedAt?: Date;
@@ -27,43 +27,43 @@ interface FormularioProps {
 export class Formulario {
   private constructor(
     public readonly id: FormularioId,
-    public readonly nombres: string,
-    public readonly apellidos: string,
-    public readonly tipoDocumento: TipoDocumento,
-    public readonly numeroDocumento: NumeroDocumento,
+    public readonly nombre: string,
+    public readonly apellido: string,
+    public readonly tipo_documento: TipoDocumento,
+    public readonly numero_documento: NumeroDocumento,
     public readonly celular: Celular,
-    public readonly email: Email,
-    public readonly tratamientoDatos: boolean,
+    public readonly correo: Email,
+    public readonly tratamiento_datos: boolean,
     public readonly camposAdicionales: Record<string, unknown> | undefined,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
 
   static create(props: FormularioProps): Result<Formulario> {
-    if (!props.tratamientoDatos) {
+    if (!props.tratamiento_datos) {
       return Result.fail(new TratamientoDatosNotAcceptedError());
     }
 
-    const nombres = props.nombres?.trim() || "";
-    const apellidos = props.apellidos?.trim() || "";
+    const nombre = props.nombre?.trim() || "";
+    const apellido = props.apellido?.trim() || "";
 
-    if (!nombres || nombres.length < 2 || nombres.length > 100) {
-      return Result.fail(new InvalidNombresError("El nombre es requerido y debe tener entre 2 y 100 caracteres"));
+    if (!nombre || nombre.length < 2 || nombre.length > 100) {
+      return Result.fail(new InvalidNombreError("El nombre es requerido y debe tener entre 2 y 100 caracteres"));
     }
 
-    if (!apellidos || apellidos.length < 2 || apellidos.length > 100) {
-      return Result.fail(new InvalidApellidosError("El apellido es requerido y debe tener entre 2 y 100 caracteres"));
+    if (!apellido || apellido.length < 2 || apellido.length > 100) {
+      return Result.fail(new InvalidApellidoError("El apellido es requerido y debe tener entre 2 y 100 caracteres"));
     }
 
     const formulario = new Formulario(
       props.id || FormularioId.create(),
-      nombres,
-      apellidos,
-      props.tipoDocumento,
-      props.numeroDocumento,
+      nombre,
+      apellido,
+      props.tipo_documento,
+      props.numero_documento,
       props.celular,
-      props.email,
-      props.tratamientoDatos,
+      props.correo,
+      props.tratamiento_datos,
       props.camposAdicionales,
       props.createdAt || new Date(),
       props.updatedAt || new Date(),

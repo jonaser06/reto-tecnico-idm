@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Identificador unico del formulario
+    example: "550e8400-e29b-41d4-a716-446655440000"
+  nombre:
+    type: string
+    example: "Juan"
+  apellido:
+    type: string
+    example: "Perez"
+  tipo_documento:
+    type: string
+    enum: [DNI, CE, PASAPORTE]
+    example: "DNI"
+  numero_documento:
+    type: string
+    example: "12345678"
+  correo:
+    type: string
+    format: email
+    example: "juan.perez@email.com"
+  celular:
+    type: string
+    example: "3001234567"
+  tratamiento_datos:
+    type: boolean
+    example: true
+  createdAt:
+    type: string
+    format: date-time
+    description: Fecha de creacion
+    example: "2024-01-15T10:30:00.000Z"
+  updatedAt:
+    type: string
+    format: date-time
+    description: Fecha de ultima actualizacion
+    example: "2024-01-15T10:30:00.000Z"
+additionalProperties:
+  description: Campos adicionales dinamicos enviados en el registro

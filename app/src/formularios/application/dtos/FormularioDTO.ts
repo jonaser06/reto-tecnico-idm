@@ -1,13 +1,13 @@
 export interface FormularioDTO {
   id: string;
-  nombres: string;
-  apellidos: string;
-  tipoDocumento: string;
-  numeroDocumento: string;
+  nombre: string;
+  apellido: string;
+  tipo_documento: string;
+  numero_documento: string;
   celular: string;
-  email: string;
-  tratamientoDatos: boolean;
+  correo: string;
+  tratamiento_datos: boolean;
   createdAt: string;
   updatedAt: string;
-  [key: string]: any; // Permite campos adicionales dinámicos
+  [key: string]: unknown;
 }

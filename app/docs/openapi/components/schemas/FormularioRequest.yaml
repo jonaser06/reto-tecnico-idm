@@ -1,0 +1,52 @@
+type: object
+required:
+  - nombre
+  - apellido
+  - tipo_documento
+  - numero_documento
+  - correo
+  - celular
+  - tratamiento_datos
+properties:
+  nombre:
+    type: string
+    minLength: 2
+    maxLength: 100
+    description: Nombre del solicitante
+    example: "Juan"
+  apellido:
+    type: string
+    minLength: 2
+    maxLength: 100
+    description: Apellido del solicitante
+    example: "Perez"
+  tipo_documento:
+    type: string
+    enum: [DNI, CE, PASAPORTE]
+    description: |
+      Tipo de documento de identidad:
+      - DNI: Documento Nacional de Identidad
+      - CE: Carnet de Extranjeria
+      - PASAPORTE: Pasaporte
+    example: "DNI"
+  numero_documento:
+    type: string
+    pattern: '^[a-zA-Z0-9]+$'
+    description: Numero de documento (solo letras y numeros)
+    example: "12345678"
+  correo:
+    type: string
+    format: email
+    description: Correo electronico valido
+    example: "juan.perez@email.com"
+  celular:
+    type: string
+    pattern: '^\+?[0-9]{9,15}$'
+    description: Numero de celular (9-15 digitos, puede incluir +)
+    example: "3001234567"
+  tratamiento_datos:
+    type: boolean
+    description: Aceptacion del tratamiento de datos personales (debe ser true)
+    example: true
+additionalProperties:
+  description: Campos adicionales dinamicos

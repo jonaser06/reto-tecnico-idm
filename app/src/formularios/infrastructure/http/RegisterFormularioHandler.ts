@@ -11,13 +11,13 @@ import { buildContainer } from "../../../shared/infrastructure/container/contain
 import { validatorMiddleware } from "../../../shared/infrastructure/middleware/validator.middleware";
 
 const CAMPOS_OBLIGATORIOS = [
-  "nombres",
-  "apellidos",
-  "tipoDocumento",
-  "numeroDocumento",
-  "email",
+  "nombre",
+  "apellido",
+  "tipo_documento",
+  "numero_documento",
+  "correo",
   "celular",
-  "tratamientoDatos",
+  "tratamiento_datos",
 ];
 
 const HEADERS = {
@@ -39,13 +39,13 @@ export class RegisterFormularioHandler {
       const camposAdicionales = this.extraerCamposAdicionales(originalBody);
 
       const command = new RegistrarFormularioCommand(
-        input.nombres,
-        input.apellidos,
-        input.tipoDocumento,
-        input.numeroDocumento,
+        input.nombre,
+        input.apellido,
+        input.tipo_documento,
+        input.numero_documento,
         input.celular,
-        input.email,
-        input.tratamientoDatos,
+        input.correo,
+        input.tratamiento_datos,
         camposAdicionales,
       );
 

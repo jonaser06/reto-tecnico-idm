@@ -1,0 +1,26 @@
+description: Error de validación
+content:
+  application/json:
+    schema:
+      $ref: '../schemas/ErrorResponse.yaml'
+    examples:
+      email_invalido:
+        summary: Email inválido
+        value:
+          code: VALIDATION_ERROR
+          message: "Email inválido: correo-malo"
+      documento_duplicado:
+        summary: Documento ya registrado
+        value:
+          code: VALIDATION_ERROR
+          message: "Ya existe un formulario con documento CC 12345678"
+      tratamiento_no_aceptado:
+        summary: Tratamiento de datos no aceptado
+        value:
+          code: VALIDATION_ERROR
+          message: "Debe aceptar el tratamiento de datos"
+      campos_requeridos:
+        summary: Campos requeridos faltantes
+        value:
+          code: VALIDATION_ERROR
+          message: "El nombre es requerido, El email es requerido"

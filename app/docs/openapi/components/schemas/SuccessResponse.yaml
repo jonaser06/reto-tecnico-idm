@@ -1,0 +1,14 @@
+type: object
+required:
+  - code
+  - message
+  - data
+properties:
+  code:
+    type: string
+    example: "SUCCESS"
+  message:
+    type: string
+    example: "Formulario registrado exitosamente"
+  data:
+    $ref: './FormularioResponse.yaml'

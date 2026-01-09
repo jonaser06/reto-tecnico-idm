@@ -7,79 +7,75 @@ import { NumeroDocumento } from "../../domain/value-objects/NumeroDocumento";
 
 export interface DynamoDBItem {
   id: string;
-  nombres: string;
-  apellidos: string;
+  nombre: string;
+  apellido: string;
   tipo_documento: string;
   numero_documento: string;
   celular: string;
-  email: string;
+  correo: string;
   tratamiento_datos: boolean;
   createdAt: string;
   updatedAt: string;
-  [key: string]: any; // Permitir campos adicionales dinámicos
+  [key: string]: unknown;
 }
+
+const CAMPOS_BASE = [
+  "id",
+  "nombre",
+  "apellido",
+  "tipo_documento",
+  "numero_documento",
+  "celular",
+  "correo",
+  "tratamiento_datos",
+  "createdAt",
+  "updatedAt",
+];
 
 export class FormularioMapper {
   static toPersistence(formulario: Formulario): DynamoDBItem {
     const baseItem: DynamoDBItem = {
       id: formulario.id.getValue(),
-      nombres: formulario.nombres,
-      apellidos: formulario.apellidos,
-      tipo_documento: formulario.tipoDocumento.getValue(),
-      numero_documento: formulario.numeroDocumento.getValue(),
+      nombre: formulario.nombre,
+      apellido: formulario.apellido,
+      tipo_documento: formulario.tipo_documento.getValue(),
+      numero_documento: formulario.numero_documento.getValue(),
       celular: formulario.celular.getValue(),
-      email: formulario.email.getValue(),
-      tratamiento_datos: formulario.tratamientoDatos,
+      correo: formulario.correo.getValue(),
+      tratamiento_datos: formulario.tratamiento_datos,
       createdAt: formulario.createdAt.toISOString(),
       updatedAt: formulario.updatedAt.toISOString(),
     };
 
-    // Expandir campos adicionales al nivel superior
     if (formulario.camposAdicionales) {
-      Object.keys(formulario.camposAdicionales).forEach((key) => {
-        baseItem[key] = formulario.camposAdicionales![key];
-      });
+      Object.assign(baseItem, formulario.camposAdicionales);
     }
 
     return baseItem;
   }
 
   static toDomain(item: DynamoDBItem): Formulario {
-    const email = Email.create(item.email).getValue();
+    const correo = Email.create(item.correo).getValue();
     const celular = Celular.create(item.celular).getValue();
-    const tipoDocumento = TipoDocumento.create(item.tipo_documento).getValue();
-    const numeroDocumento = NumeroDocumento.create(item.numero_documento).getValue();
-
-    // Extraer campos adicionales (todos los que no son campos base)
-    const camposBase = [
-      "id",
-      "nombres",
-      "apellidos",
-      "tipo_documento",
-      "numero_documento",
-      "celular",
-      "email",
-      "tratamiento_datos",
-      "createdAt",
-      "updatedAt",
-    ];
+    const tipo_documento = TipoDocumento.create(item.tipo_documento).getValue();
+    const numero_documento = NumeroDocumento.create(item.numero_documento).getValue();
 
     const camposAdicionales: Record<string, unknown> = {};
-    Object.keys(item).forEach((key) => {
-      if (!camposBase.includes(key)) {
+    for (const key of Object.keys(item)) {
+      if (!CAMPOS_BASE.includes(key)) {
         camposAdicionales[key] = item[key];
       }
-    });
+    }
 
     const formularioResult = Formulario.create({
       id: FormularioId.create(item.id),
-      nombres: item.nombres,
-      apellidos: item.apellidos,
-      tipoDocumento,
-      numeroDocumento,
+      nombre: item.nombre,
+      apellido: item.apellido,
+      tipo_documento,
+      numero_documento,
       celular,
-      email: email,
-      tratamientoDatos: item.tratamiento_datos,
+      correo,
+      tratamiento_datos: item.tratamiento_datos,
       camposAdicionales: Object.keys(camposAdicionales).length > 0 ? camposAdicionales : undefined,
       createdAt: new Date(item.createdAt),
       updatedAt: new Date(item.updatedAt),

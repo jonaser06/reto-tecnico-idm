@@ -1,127 +1,127 @@
 ### Variables
-@baseUrl = http://localhost:3000
-@contentType = application/json
+# @baseUrl = http://localhost:3000
+@baseUrl = https://k0qog389t8.execute-api.us-east-1.amazonaws.com
 
 ###############################################
 # REGISTRAR FORMULARIOS
 ###############################################
 
-### 1. Registrar formulario válido con CC
+### 1. Registrar formulario valido con DNI
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "nombres": "Juan Carlos",
-  "apellidos": "Pérez García",
-  "tipoDocumento": "CC",
-  "numeroDocumento": "1234567890",
-  "email": "juan.perez@example.com",
+  "nombre": "Juan Carlos",
+  "apellido": "Perez Garcia",
+  "tipo_documento": "DNI",
+  "numero_documento": "12345678",
+  "correo": "juan.perez@example.com",
   "celular": "3001234567",
-  "tratamientoDatos": true
+  "tratamiento_datos": true
 }
 
 ### 2. Registrar con CE y campos adicionales
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "nombres": "María",
-  "apellidos": "González",
-  "tipoDocumento": "CE",
-  "numeroDocumento": "CE11223344",
-  "email": "maria.gonzalez@test.com",
+  "nombre": "Maria",
+  "apellido": "Gonzalez",
+  "tipo_documento": "CE",
+  "numero_documento": "CE11223344",
+  "correo": "maria.gonzalez@test.com",
   "celular": "3159876543",
-  "tratamientoDatos": true,
+  "tratamiento_datos": true,
   "empresa": "Tech Solutions SAS",
   "cargo": "Gerente de Proyectos",
-  "ciudad": "Bogotá"
+  "ciudad": "Lima"
 }
 
-### 3. Registrar con PA (Pasaporte)
+### 3. Registrar con PASAPORTE
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "nombres": "Carlos",
-  "apellidos": "Rodríguez",
-  "tipoDocumento": "PA",
-  "numeroDocumento": "AB123456",
-  "email": "carlos.rodriguez@mail.co",
+  "nombre": "Carlos",
+  "apellido": "Rodriguez",
+  "tipo_documento": "PASAPORTE",
+  "numero_documento": "AB123456",
+  "correo": "carlos.rodriguez@mail.co",
   "celular": "3207654321",
-  "tratamientoDatos": true
+  "tratamiento_datos": true
 }
 
 ###############################################
 # VALIDACIONES - CASOS DE ERROR
 ###############################################
 
-### 4. ERROR: Falta nombres
+### 4. ERROR: Falta nombre
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "apellidos": "Martínez",
-  "tipoDocumento": "CC",
-  "numeroDocumento": "1122334455",
-  "email": "test@example.com",
+  "apellido": "Martinez",
+  "tipo_documento": "DNI",
+  "numero_documento": "11223344",
+  "correo": "test@example.com",
   "celular": "3001112233",
-  "tratamientoDatos": true
+  "tratamiento_datos": true
 }
 
-### 5. ERROR: Email inválido
+### 5. ERROR: Correo invalido
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "nombres": "Pedro",
-  "apellidos": "Sánchez",
-  "tipoDocumento": "CC",
-  "numeroDocumento": "5566778899",
-  "email": "correo-invalido",
+  "nombre": "Pedro",
+  "apellido": "Sanchez",
+  "tipo_documento": "DNI",
+  "numero_documento": "55667788",
+  "correo": "correo-invalido",
   "celular": "3009876543",
-  "tratamientoDatos": true
+  "tratamiento_datos": true
 }
 
-### 6. ERROR: Celular inválido
+### 6. ERROR: Celular invalido
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "nombres": "Diego",
-  "apellidos": "Fernández",
-  "tipoDocumento": "CC",
-  "numeroDocumento": "4433221100",
-  "email": "diego@example.com",
+  "nombre": "Diego",
+  "apellido": "Fernandez",
+  "tipo_documento": "DNI",
+  "numero_documento": "44332211",
+  "correo": "diego@example.com",
   "celular": "123",
-  "tratamientoDatos": true
+  "tratamiento_datos": true
 }
 
-### 7. ERROR: tratamientoDatos en false
+### 7. ERROR: tratamiento_datos en false
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "nombres": "Luis",
-  "apellidos": "Torres",
-  "tipoDocumento": "CC",
-  "numeroDocumento": "9988776655",
-  "email": "luis.torres@example.com",
+  "nombre": "Luis",
+  "apellido": "Torres",
+  "tipo_documento": "DNI",
+  "numero_documento": "99887766",
+  "correo": "luis.torres@example.com",
   "celular": "3006655443",
-  "tratamientoDatos": false
+  "tratamiento_datos": false
 }
 
-### 8. ERROR: tipo_documento inválido
+### 8. ERROR: tipo_documento invalido
 POST {{baseUrl}}/formularios
-Content-Type: {{contentType}}
+Content-Type: application/json
 
 {
-  "nombres": "Sofia",
-  "apellidos": "Ramírez",
-  "tipoDocumento": "XX",
-  "numeroDocumento": "1111111111",
-  "email": "sofia.ramirez@example.com",
+  "nombre": "Sofia",
+  "apellido": "Ramirez",
+  "tipo_documento": "XX",
+  "numero_documento": "11111111",
+  "correo": "sofia.ramirez@example.com",
   "celular": "3005544332",
-  "tratamientoDatos": true
+  "tratamiento_datos": true
 }
 
 ###############################################

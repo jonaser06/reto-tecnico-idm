@@ -20,16 +20,15 @@ describe("RegistrarFormularioCommandHandler", () => {
   describe("execute", () => {
     const validCommand = new RegistrarFormularioCommand(
       "Juan",
-      "Pérez",
-      "CC",
-      "1234567890",
+      "Perez",
+      "DNI",
+      "12345678",
       "3001234567",
       "juan@example.com",
       true,
-      {},
     );
 
-    it("debería registrar un formulario válido", async () => {
+    it("deberia registrar un formulario valido", async () => {
       mockRepository.findByDocumento.mockResolvedValue(null);
 
       const result = await handler.execute(validCommand);
@@ -38,16 +37,15 @@ describe("RegistrarFormularioCommandHandler", () => {
       expect(mockRepository.save).toHaveBeenCalledTimes(1);
     });
 
-    it("debería rechazar email inválido", async () => {
+    it("deberia rechazar correo invalido", async () => {
       const invalidCommand = new RegistrarFormularioCommand(
         "Juan",
-        "Pérez",
-        "CC",
-        "1234567890",
+        "Perez",
+        "DNI",
+        "12345678",
         "3001234567",
-        "invalid-email",
+        "correo-invalido",
         true,
-        {},
       );
 
       const result = await handler.execute(invalidCommand);
@@ -56,16 +54,15 @@ describe("RegistrarFormularioCommandHandler", () => {
       expect(mockRepository.save).not.toHaveBeenCalled();
     });
 
-    it("debería rechazar celular inválido", async () => {
+    it("deberia rechazar celular invalido", async () => {
       const invalidCommand = new RegistrarFormularioCommand(
         "Juan",
-        "Pérez",
-        "CC",
-        "1234567890",
-        "123", // celular inválido
+        "Perez",
+        "DNI",
+        "12345678",
+        "123",
         "juan@example.com",
         true,
-        {},
       );
 
       const result = await handler.execute(invalidCommand);
@@ -74,16 +71,15 @@ describe("RegistrarFormularioCommandHandler", () => {
       expect(mockRepository.save).not.toHaveBeenCalled();
     });
 
-    it("debería rechazar tipo de documento inválido", async () => {
+    it("deberia rechazar tipo de documento invalido", async () => {
       const invalidCommand = new RegistrarFormularioCommand(
         "Juan",
-        "Pérez",
-        "TI", // tipo inválido
-        "1234567890",
+        "Perez",
+        "CC",
+        "12345678",
         "3001234567",
         "juan@example.com",
         true,
-        {},
       );
 
       const result = await handler.execute(invalidCommand);
@@ -91,16 +87,15 @@ describe("RegistrarFormularioCommandHandler", () => {
       expect(result.isSuccess()).toBe(false);
     });
 
-    it("debería rechazar tratamiento de datos false", async () => {
+    it("deberia rechazar tratamiento_datos false", async () => {
       const invalidCommand = new RegistrarFormularioCommand(
         "Juan",
-        "Pérez",
-        "CC",
-        "1234567890",
+        "Perez",
+        "DNI",
+        "12345678",
         "3001234567",
         "juan@example.com",
-        false, // tratamientoDatos false
-        {},
+        false,
       );
 
       const result = await handler.execute(invalidCommand);
@@ -109,7 +104,7 @@ describe("RegistrarFormularioCommandHandler", () => {
       expect(result.getError()?.message).toContain("tratamiento de datos");
     });
 
-    it("debería rechazar documento duplicado", async () => {
+    it("deberia rechazar documento duplicado", async () => {
       mockRepository.findByDocumento.mockResolvedValue({} as Formulario);
 
       const result = await handler.execute(validCommand);
@@ -119,13 +114,34 @@ describe("RegistrarFormularioCommandHandler", () => {
       expect(mockRepository.save).not.toHaveBeenCalled();
     });
 
-    it("debería manejar errores de repositorio", async () => {
+    it("deberia manejar errores de repositorio", async () => {
       mockRepository.findByDocumento.mockResolvedValue(null);
       mockRepository.save.mockRejectedValue(new Error("DB Error"));
 
       const result = await handler.execute(validCommand);
 
       expect(result.isSuccess()).toBe(false);
+    });
+
+    it("deberia registrar formulario con campos adicionales", async () => {
+      mockRepository.findByDocumento.mockResolvedValue(null);
+
+      const commandConCamposAdicionales = new RegistrarFormularioCommand(
+        "Maria",
+        "Garcia",
+        "CE",
+        "CE123456",
+        "3159876543",
+        "maria@example.com",
+        true,
+        { empresa: "Tech Corp", cargo: "Gerente" },
+      );
+
+      const result = await handler.execute(commandConCamposAdicionales);
+
+      expect(result.isSuccess()).toBe(true);
+      expect(result.getValue().empresa).toBe("Tech Corp");
+      expect(result.getValue().cargo).toBe("Gerente");
     });
   });
 });

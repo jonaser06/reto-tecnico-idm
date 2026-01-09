@@ -1,6 +1,5 @@
 export const TYPES = {
   // Infrastructure
-  Logger: Symbol.for("ILogger"),
   FormularioRepository: Symbol.for("IFormularioRepository"),
   DynamoDBClient: Symbol.for("DynamoDBClient"),
 

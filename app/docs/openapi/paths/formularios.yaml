@@ -1,0 +1,117 @@
+get:
+  tags:
+    - Formularios
+  summary: Listar formularios
+  operationId: listarFormularios
+  description: Obtiene todos los formularios registrados en el sistema.
+  responses:
+    '200':
+      description: Lista de formularios obtenida exitosamente
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: SUCCESS
+              message:
+                type: string
+                example: Formularios obtenidos exitosamente
+              count:
+                type: integer
+                example: 1
+              data:
+                type: array
+                items:
+                  $ref: '../components/schemas/FormularioResponse.yaml'
+          example:
+            code: SUCCESS
+            message: Formularios obtenidos exitosamente
+            count: 1
+            data:
+              - id: "550e8400-e29b-41d4-a716-446655440000"
+                nombre: "Juan"
+                apellido: "Perez"
+                tipo_documento: "DNI"
+                numero_documento: "12345678"
+                correo: "juan.perez@email.com"
+                celular: "3001234567"
+                tratamiento_datos: true
+                empresa: "Mi Empresa"
+                createdAt: "2024-01-15T10:30:00.000Z"
+                updatedAt: "2024-01-15T10:30:00.000Z"
+    '500':
+      $ref: '../components/responses/InternalError.yaml'
+
+post:
+  tags:
+    - Formularios
+  summary: Registrar formulario
+  operationId: registrarFormulario
+  description: |
+    Registra un nuevo formulario con campos obligatorios y opcionales.
+
+    ## Campos obligatorios
+    nombre, apellido, tipo_documento, numero_documento, correo, celular, tratamiento_datos
+
+    ## Campos adicionales
+    Se pueden enviar campos adicionales dinamicos (ej: empresa, cargo, ciudad).
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/FormularioRequest.yaml'
+        examples:
+          minimo:
+            summary: Solo campos obligatorios
+            value:
+              nombre: "Juan"
+              apellido: "Perez"
+              tipo_documento: "DNI"
+              numero_documento: "12345678"
+              correo: "juan.perez@email.com"
+              celular: "3001234567"
+              tratamiento_datos: true
+          completo:
+            summary: Con campos adicionales
+            value:
+              nombre: "Maria"
+              apellido: "Garcia"
+              tipo_documento: "CE"
+              numero_documento: "CE11223344"
+              correo: "maria.garcia@test.com"
+              celular: "3159876543"
+              tratamiento_datos: true
+              empresa: "Tech Solutions"
+              cargo: "Gerente"
+              ciudad: "Lima"
+  responses:
+    '201':
+      description: Formulario registrado exitosamente
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/SuccessResponse.yaml'
+          example:
+            code: SUCCESS
+            message: Formulario registrado exitosamente
+            data:
+              id: "550e8400-e29b-41d4-a716-446655440000"
+              nombre: "Maria"
+              apellido: "Garcia"
+              tipo_documento: "CE"
+              numero_documento: "CE11223344"
+              correo: "maria.garcia@test.com"
+              celular: "3159876543"
+              tratamiento_datos: true
+              empresa: "Tech Solutions"
+              cargo: "Gerente"
+              ciudad: "Lima"
+              createdAt: "2024-01-15T10:30:00.000Z"
+              updatedAt: "2024-01-15T10:30:00.000Z"
+    '400':
+      $ref: '../components/responses/BadRequest.yaml'
+    '500':
+      $ref: '../components/responses/InternalError.yaml'

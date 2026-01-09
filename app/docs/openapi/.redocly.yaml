@@ -1,0 +1,21 @@
+extends:
+  - recommended
+
+apis:
+  main:
+    root: ./openapi.yaml
+
+rules:
+  no-unresolved-refs: error
+  no-unused-components: warn
+  operation-operationId: error
+  operation-summary: error
+  tag-description: off
+
+theme:
+  openapi:
+    generateCodeSamples:
+      languages:
+        - lang: curl
+        - lang: JavaScript
+        - lang: Python

@@ -2,9 +2,9 @@ import { Result } from "../../../shared/types/Result";
 import { InvalidTipoDocumentoError } from "../../../shared/errors/DomainError";
 
 export enum TipoDocumentoEnum {
-  CC = "CC",
+  DNI = "DNI",
   CE = "CE",
-  PA = "PA",
+  PASAPORTE = "PASAPORTE",
 }
 
 export class TipoDocumento {

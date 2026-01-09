@@ -8,8 +8,8 @@ export abstract class DomainError extends Error {
 export class ValidationError extends DomainError {}
 
 export class InvalidEmailError extends ValidationError {
-  constructor(email: string) {
-    super(`Email inválido: ${email}`);
+  constructor(correo: string) {
+    super(`Correo inválido: ${correo}`);
   }
 }
 
@@ -21,7 +21,7 @@ export class InvalidCelularError extends ValidationError {
 
 export class InvalidTipoDocumentoError extends ValidationError {
   constructor(tipo: string) {
-    super(`Tipo de documento inválido: ${tipo}. Debe ser CC, CE o PA`);
+    super(`Tipo de documento inválido: ${tipo}. Debe ser DNI, CE o PASAPORTE`);
   }
 }
 
@@ -31,13 +31,13 @@ export class TratamientoDatosNotAcceptedError extends ValidationError {
   }
 }
 
-export class InvalidNombresError extends ValidationError {
+export class InvalidNombreError extends ValidationError {
   constructor(message: string) {
     super(message);
   }
 }
 
-export class InvalidApellidosError extends ValidationError {
+export class InvalidApellidoError extends ValidationError {
   constructor(message: string) {
     super(message);
   }

@@ -1,4 +1,4 @@
-.PHONY: deploy-table start remove-table test
+.PHONY: deploy-table start remove-table test docs deploy remove
 
 STAGE ?= dev
 
@@ -13,3 +13,12 @@ remove-table: ## Elimina la tabla DynamoDB de AWS
 
 test: ## Ejecuta tests con coverage (sin detener el servidor)
 	docker-compose exec app yarn test:coverage
+
+docs: ## Genera y abre documentación OpenAPI
+	cd app && npx @redocly/cli build-docs docs/openapi/openapi.yaml -o docs/index.html && open docs/index.html
+
+deploy: ## Despliega las funciones Lambda a AWS
+	docker-compose exec app npx serverless deploy --config serverless-cloud.yml --stage $(STAGE)
+
+remove: ## Elimina las funciones Lambda de AWS
+	docker-compose exec app npx serverless remove --config serverless-cloud.yml --stage $(STAGE)
