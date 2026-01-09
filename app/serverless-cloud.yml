@@ -1,4 +1,4 @@
-service: formularios-microservice
+service: formularios-api
 frameworkVersion: "3"
 
 plugins:

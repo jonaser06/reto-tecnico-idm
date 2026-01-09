@@ -1,6 +1,6 @@
 ### Variables
 # @baseUrl = http://localhost:3000
-@baseUrl = https://k0qog389t8.execute-api.us-east-1.amazonaws.com
+@baseUrl = https://y0sudbgp3d.execute-api.us-east-1.amazonaws.com
 
 ###############################################
 # REGISTRAR FORMULARIOS
